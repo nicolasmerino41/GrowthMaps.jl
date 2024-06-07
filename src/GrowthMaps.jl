@@ -1,5 +1,5 @@
 module GrowthMaps
-
+__precompile__(false)
 # Use the README as the module docs
 @doc read(joinpath(dirname(@__DIR__), "README.md"), String) GrowthMaps
 
@@ -10,8 +10,7 @@ using ConstructionBase,
       LsqFit,
       Plots,
       Reexport,
-      Unitful,
-      UnitfulRecipes
+      Unitful
 
 @reexport using ModelParameters
 

@@ -21,7 +21,7 @@ to use atom with the "uber-juno" and "language-weave" plugins.
 These packages take care of loading and plotting data, and handling sci units and dates.
 
 ```julia; results="hidden"
-using GrowthMaps, Plots, Unitful, UnitfulRecipes, Dates
+using GrowthMaps, Plots, Unitful, Dates
 using Rasters, ArchGDAL, NCDatasets
 using CSV, DataFrames
 using Unitful: °C, K, cal, mol

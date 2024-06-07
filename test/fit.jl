@@ -30,17 +30,37 @@ end
     interface = manualfit!(model, data; obs=obs);
 end
 
+# @testset "Map fit interface" begin
+#     ## Set up series data
+#     tempdata = Raster.(
+#         [rand(0.0:40.0, 10, 10) for i in 1:5], Ref((X, Y)); 
+#         name=:stress, missingval=-99.0
+#     )
+#     stacks = [RasterStack((temp=tempdata[i],)) for i in 1:length(tempdata)]
+#     timedim = (Ti(Sampled((1:1:5)hr; span=Regular(1hr))),)
+#     modelkwargs = (series=RasterSeries(stacks, timedim), tspan=1hr:1hr:5hr)
+#     interface = mapfit!(model, modelkwargs; occurrence=[(1, 2), (9, 10)]);
+# end
 @testset "Map fit interface" begin
-    ## Set up series data
-    tempdata = Raster.(
-        [rand(0.0:40.0, 10, 10) for i in 1:5], Ref((X, Y)); 
-        name=:stress, missingval=-99.0
-    )
-    stacks = [RasterStack((temp=tempdata[i],)) for i in 1:length(tempdata)]
+    # Generate random temperature data and convert each matrix to a Raster with dimensions.
+    tempdata = [Raster(rand(0.0:40.0, 10, 10), dims=(X(), Y()), name=:temp, missingval=-99.0) for i in 1:5]
+    
+    # Create a RasterStack for each Raster in tempdata.
+    stacks = [RasterStack(temp=tempdata[i]) for i in 1:length(tempdata)]
+    
+    # Define the time dimension as a regular sampled dimension.
     timedim = (Ti(Sampled((1:1:5)hr; span=Regular(1hr))),)
-    modelkwargs = (series=RasterSeries(stacks, timedim), tspan=1hr:1hr:5hr)
-    interface = mapfit!(model, modelkwargs; occurrence=[(1, 2), (9, 10)]);
+    
+    # Create a RasterSeries from the stacks and timedim.
+    series = RasterSeries(stacks, timedim)
+    
+    # Define model arguments for the fitting function.
+    modelkwargs = (series=series, tspan=1hr:1hr:5hr)
+    
+    # Perform the model fitting with the specified occurrence positions.
+    interface = mapfit!(model, modelkwargs; occurrence=[(1, 2), (9, 10)])
 end
+
 
 # To test interfaces manually
 # using Blink
